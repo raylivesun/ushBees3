@@ -1,0 +1,226 @@
+/* were aware that research has shown that direct exposure to these algorithms can lead
+to serious conceptual errors related to the order of magnitude and the decimal rep-
+resentations of numbers. Postponing the teaching of digit-based algorithms like in
+the Netherlands was not possible. In Puerto Rico, if these algorithms are not present
+in the arithmetic lessons for the second grade, teachers and the official educational
+system will not accept such lessons as adequate for teaching. Therefore, the Puerto
+Rican team followed the standards, but presented the algorithms in such a way in the
+materials that their teaching was made more meaningful, which indeed significantly
+improved the students’ understanding of them as was revealed in follow-up research.
+Another adaptation stemmed from the teachers’ wish for didactical material full of
+interesting and concise contexts, but avoiding general and open-ended tasks. Since
+findings from previous pilot testing showed that MiC material requires students to
+do extensive reading, tasks which had much text had to be avoided because it kept
+teachers from using this material. Instead there was a need for a more piecemeal
+approach. */
+
+let mut array: [i32; 3] = [0; 3];
+
+array[1] = 1;
+array[2] = 2;
+
+assert_eq!([1, 2], &array[1..]);
+
+// This loop prints: 0 1 2
+for x in array {
+    print!("{x} ");
+}
+
+let array: [i32; 3] = [0; 3];
+
+for x in &array { }
+
+let bytes: [u8; 3] = [1, 0, 2];
+assert_eq!(1, u16::from_le_bytes(<[u8; 2]>::try_from(&bytes[0..2]).unwrap()));
+assert_eq!(512, u16::from_le_bytes(bytes[1..3].try_into().unwrap()));
+
+fn move_away(_: String) { /* Do interesting things. */ }
+
+let [john, roa] = ["John".to_string(), "Roa".to_string()];
+move_away(john);
+move_away(roa);
+
+let tuple: (u32, u32, u32) = (1, 2, 3);
+let array: [u32; 3] = tuple.into();
+
+// Rust 2015 and 2018:
+
+let array: [i32; 3] = [0; 3];
+
+// This creates a slice iterator, producing references to each value.
+for item in array.into_iter().enumerate() {
+    let (i, x): (usize, &i32) = item;
+    println!("array[{i}] = {x}");
+}
+
+// The `array_into_iter` lint suggests this change for future compatibility:
+for item in array.iter().enumerate() {
+    let (i, x): (usize, &i32) = item;
+    println!("array[{i}] = {x}");
+}
+
+// You can explicitly iterate an array by value using `IntoIterator::into_iter`
+for item in IntoIterator::into_iter(array).enumerate() {
+    let (i, x): (usize, i32) = item;
+    println!("array[{i}] = {x}");
+}
+
+// Rust 2021:
+
+let array: [i32; 3] = [0; 3];
+
+// This iterates by reference:
+for item in array.iter().enumerate() {
+    let (i, x): (usize, &i32) = item;
+    println!("array[{i}] = {x}");
+}
+
+// This iterates by value:
+for item in array.into_iter().enumerate() {
+    let (i, x): (usize, i32) = item;
+    println!("array[{i}] = {x}");
+}
+
+// Rust 2015 and 2018:
+
+let array: [i32; 3] = [0; 3];
+
+// This iterates by reference:
+for item in array.iter() {
+    let x: &i32 = item;
+    println!("{x}");
+}
+
+// This iterates by value:
+for item in IntoIterator::into_iter(array) {
+    let x: i32 = item;
+    println!("{x}");
+}
+
+// This iterates by value:
+for item in array {
+    let x: i32 = item;
+    println!("{x}");
+}
+
+// IntoIter can also start a chain.
+// This iterates by value:
+for item in IntoIterator::into_iter(array).enumerate() {
+    let (i, x): (usize, i32) = item;
+    println!("array[{i}] = {x}");
+}
+
+#![feature(ascii_char)]
+#![feature(const_option)]
+
+const HEX_DIGITS: [std::ascii::Char; 16] =
+    *b"0123456789abcdef".as_ascii().unwrap();
+
+assert_eq!(HEX_DIGITS[1].as_str(), "1");
+assert_eq!(HEX_DIGITS[10].as_str(), "a");
+
+let x = [1, 2, 3];
+let y = x.map(|v| v + 1);
+assert_eq!(y, [2, 3, 4]);
+
+let x = [1, 2, 3];
+let mut temp = 0;
+let y = x.map(|v| { temp += 1; v * temp });
+assert_eq!(y, [1, 4, 9]);
+
+let x = ["Ferris", "Bueller's", "Day", "Off"];
+let y = x.map(|v| v.len());
+assert_eq!(y, [6, 9, 3, 3]);
+
+#![feature(array_try_map)]
+
+let a = ["1", "2", "3"];
+let b = a.try_map(|v| v.parse::<u32>()).unwrap().map(|v| v + 1);
+assert_eq!(b, [2, 3, 4]);
+
+let a = ["1", "2a", "3"];
+let b = a.try_map(|v| v.parse::<u32>());
+assert!(b.is_err());
+
+use std::num::NonZero;
+
+let z = [1, 2, 0, 3, 4];
+assert_eq!(z.try_map(NonZero::new), None);
+
+let a = [1, 2, 3];
+let b = a.try_map(NonZero::new);
+let c = b.map(|x| x.map(NonZero::get));
+assert_eq!(c, Some(a));
+
+let floats = [3.1, 2.7, -1.0];
+let float_refs: [&f64; 3] = floats.each_ref();
+assert_eq!(float_refs, [&3.1, &2.7, &-1.0]);
+
+let strings = ["Ferris".to_string(), "♥".to_string(), "Rust".to_string()];
+let is_ascii = strings.each_ref().map(|s| s.is_ascii());
+assert_eq!(is_ascii, [true, false, true]);
+
+// We can still access the original array: it has not been moved.
+assert_eq!(strings.len(), 3);
+
+let mut floats = [3.1, 2.7, -1.0];
+let float_refs: [&mut f64; 3] = floats.each_mut();
+*float_refs[0] = 0.0;
+assert_eq!(float_refs, [&mut 0.0, &mut 2.7, &mut -1.0]);
+assert_eq!(floats, [0.0, 2.7, -1.0]);
+
+#![feature(split_array)]
+
+let v = [1, 2, 3, 4, 5, 6];
+
+{
+   let (left, right) = v.split_array_ref::<0>();
+   assert_eq!(left, &[]);
+   assert_eq!(right, &[1, 2, 3, 4, 5, 6]);
+}
+
+{
+    let (left, right) = v.split_array_ref::<2>();
+    assert_eq!(left, &[1, 2]);
+    assert_eq!(right, &[3, 4, 5, 6]);
+}
+
+{
+    let (left, right) = v.split_array_ref::<6>();
+    assert_eq!(left, &[1, 2, 3, 4, 5, 6]);
+    assert_eq!(right, &[]);
+}
+
+
+#![feature(split_array)]
+
+let mut v = [1, 0, 3, 0, 5, 6];
+let (left, right) = v.split_array_mut::<2>();
+assert_eq!(left, &mut [1, 0][..]);
+assert_eq!(right, &mut [3, 0, 5, 6]);
+left[1] = 2;
+right[1] = 4;
+assert_eq!(v, [1, 2, 3, 4, 5, 6]);
+
+#![feature(split_array)]
+
+let v = [1, 2, 3, 4, 5, 6];
+
+{
+   let (left, right) = v.rsplit_array_ref::<0>();
+   assert_eq!(left, &[1, 2, 3, 4, 5, 6]);
+   assert_eq!(right, &[]);
+}
+
+{
+    let (left, right) = v.rsplit_array_ref::<2>();
+    assert_eq!(left, &[1, 2, 3, 4]);
+    assert_eq!(right, &[5, 6]);
+}
+
+{
+    let (left, right) = v.rsplit_array_ref::<6>();
+    assert_eq!(left, &[]);
+    assert_eq!(right, &[1, 2, 3, 4, 5, 6]);
+}
+

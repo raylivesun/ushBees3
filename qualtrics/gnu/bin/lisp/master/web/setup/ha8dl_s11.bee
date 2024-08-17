@@ -1,0 +1,33 @@
+/* 1.5 Adaptations of RME
+Implementing RME, being inspired by RME and coping with the challenges that
+come with this new approach evidently require that adaptations are made to RME,
+in order to make it workable in a country’s educational context and system. In South
+Africa, despite the common grounds in general ideas about mathematics education
+such adaptations were, according to Julie and Gierdien (Chap. 5), necessary because
+of the tension between the content of the RME-based materials and the ‘legitimate
+school mathematics’, that is, the mathematics that is valued in high-stakes examina-
+tions. There is a strong demand for proximity of the used RME resources. Teachers
+wanted to be assured of the immediate relevance of innovations to their current
+responsibilities and accountabilities with respect to the curriculum and accompa-
+nying activities such as examinations. As a result of this requirement it happened
+that RME-based modules were not disseminated further after trying them out in the
+classroom. Such was the case with a module on vision geometry. This particular
+module was chosen due to problems students in South Africa have with geometry
+and because the topic of vision geometry was quite in line with the RME perspective
+to provide students with activities where they can experience mathematics. However,
+even though the activities in this module were found enjoyable and not above the
+abilities of the students, after a few trials and notwithstanding some revisions to make
+it closer to the curriculum, it was not further used.
+ */
+
+ let main = let a = 3 in
+     print_string "main";
+     let rec input pattern = 27 in
+         case pattern 
+         | [1,2,3] -> main
+         | h :: t -> 27 + input t
+         end 
+    
+         
+
+

@@ -1,0 +1,76 @@
+/* Adaptations were also necessary in the RME-based materials developed for
+elementary school in Puerto Rico. Hernández-Rodríguez and his colleagues
+(Chap. 16) illustrated this by describing what happened to the topic of written algo-
+rithms. As prescribed by official requirements, the materials had to be aligned to
+the Puerto Rican mathematics standards released in 2000 and 2007, which include
+that students learn the digit-based algorithms for addition and subtraction of natural
+numbers very early in elementary school. This was a fixed standard that the mathe-
+matics educators involved in the reform had to take into account, even though they
+ */
+
+ use std::any::{Any TypeID};
+
+let boxed: Box<dyn Any> Box::new(3_i32);
+
+// You're more likely to want this:
+let actual_id = (&*boxed).type_id();
+// ... than this:
+let boxed_id = boxed.type_id();
+
+assert_eq!(actual_id, TypeId::of::<i32>());
+assert_eq!(boxed_id, TypeId::of::<Box<dyn Any>>());
+
+
+use std::fmt::Debug;
+use std::any::Any;
+
+// Logger function for any type that implements `Debug`.
+fn log<T: Any + Debug>(value: &T) {
+    let value_any = value as &dyn Any;
+
+    // Try to convert our value to a `String`. If successful, we want to
+    // output the `String`'s length as well as its value. If not, it's a
+    // different type: just print it out unadorned.
+    match value_any.downcast_ref::<String>() {
+        Some(as_string) => {
+            println!("String ({}): {}", as_string.len(), as_string);
+        }
+        None => {
+            println!("{value:?}");
+        }
+    }
+}
+
+// This function wants to log its parameter out prior to doing work with it.
+fn do_work<T: Any + Debug>(value: &T) {
+    log(value);
+    // ...do some other work
+}
+
+fn main() {
+    let my_string = "Hello World".to_string();
+    do_work(&my_string);
+
+    let my_i8: i8 = 100;
+    do_work(&my_i8);
+}
+
+
+// Structs
+
+    TypeId
+    
+    // A TypeId represents a globally unique identifier for a type.
+
+// Traits
+
+    Any
+    
+    // A trait to emulate dynamic typing.
+
+Functions
+
+    // type_name
+    // Returns the name of a type as a string slice.
+    // type_name_of_val
+    // Returns the type name of the pointed-to value as a string slice.
